@@ -1,4 +1,4 @@
-package com.zhang.pro.data_processing;
+package com.zhang.pro.data_processing.model;
 
 import java.util.Vector;
 

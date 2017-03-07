@@ -1,4 +1,4 @@
-package com.zhang.pro.data_processing;
+package com.zhang.pro.data_processing.model;
 
 public class GeoModel implements Cloneable{
 	float latitude;//Î³¶È

@@ -1,5 +1,10 @@
 package com.zhang.pro.indextree;
 
-public interface Node {
-
+public abstract class Node {
+	int id;
+	int ParentId;
+	int ChildIds[];
+	int CoreIds[];
+	float MaxDist; 
+	int Level;  
 }
