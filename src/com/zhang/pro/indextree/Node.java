@@ -1,10 +1,14 @@
 package com.zhang.pro.indextree;
 
-public abstract class Node {
-	int id;
-	int ParentId;
-	int ChildIds[];
-	int CoreIds[];
-	float MaxDist; 
-	int Level;  
+import java.util.ArrayList;
+
+import com.zhang.pro.data_processing.model.Segment;
+
+public abstract class Node {  
+	public Segment getSegment(){
+		return new Segment();
+	}
+	public ArrayList<Node> getContent() {
+		return new ArrayList();
+	}
 }

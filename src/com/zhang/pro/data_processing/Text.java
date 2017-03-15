@@ -6,6 +6,7 @@ import com.zhang.pro.data_processing.model.DataSet;
 import com.zhang.pro.data_processing.model.GeoModel;
 import com.zhang.pro.data_processing.model.PeoDataModel;
 import com.zhang.pro.data_processing.tools.FileProcess;
+import com.zhang.pro.indextree.IndexTree;
 
 public class Text {
 	public static void main(String args[]){
@@ -20,30 +21,28 @@ public class Text {
 			//将文件夹中，属于该个人的文件名字，都存放到各个人下
 			dataprocessobj.traverseAllPlt(dataset,peodatamodel,filename,3,1);
 			dataset.getPeople().addElement((PeoDataModel)peodatamodel.clone());
-			int i=0,j=0;
+			int i=0,j=0;Vector <GeoModel> obj1 = new Vector();
 			//遍历这些人对象，逐个处理文件，提取plt文件中的数据，存放到个人的轨迹段链表中，最终结果存储在dataset中。
 			for(PeoDataModel model:dataset.getPeople()){
 				i++;//目前只对第一个人的轨迹进行分析
-				if(i<=1){
+				if(i<=10){
 					System.out.println(model.getName());
 				//逐个处理每一个plt文件
 					for(String str:model.getContent().keySet())
-//					for(String str:model.getPltfiles())
 						{
 						Vector <GeoModel> obj=fileprocess.readGeoPlt(str);
-						model.getContent().replace(str, null, obj);
+						obj1 = obj;
+						//用新的更新好的<string，trajectory>更新已有的内容,中间的为对象实例，而非空
+						model.getContent().replace(str, new Vector(), obj);
 						dataprocessobj.computeTurnAngle(obj);
-						//得到每天的轨迹
-//						dataprocessobj.divideSegments(obj,60,model);
-						}
-					
-//					System.out.println(model.getTrajects().size());
+						}					
 					System.out.println(model.getContent().size());
 				}
 				}
-			/*for(int i=0;i<obj.size();i++)
-				System.out.println(obj.get(i).getTransitionangle());*/
-		} catch (Exception e) {
+			IndexTree indextree = new IndexTree();
+			indextree.createLeaf(dataset);
+			System.out.println();
+		} catch (Exception e){
 			e.printStackTrace();
 		}	
 	}

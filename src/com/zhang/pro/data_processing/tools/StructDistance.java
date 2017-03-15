@@ -3,6 +3,9 @@ package com.zhang.pro.data_processing.tools;
 import com.zhang.pro.data_processing.DataProcessing;
 import com.zhang.pro.data_processing.model.GeoModel;
 // new StructDistance(GeoModel[] segment1,GeoModel[] segment2).getStructDistance()
+/*
+ * 此部分的四个距离均根据论文改写。
+ */
 public class StructDistance {
 	DataProcessing process = new DataProcessing();
 	private GeoModel[] segment1;
@@ -29,7 +32,14 @@ public class StructDistance {
 			}
 		}
 	public double calculateAngleDistance(){
-		return 0;
+		int size = segment1.length<segment2.length?segment1.length:segment2.length;
+		double sum=0;
+		for(int i=0;i<size;i++){
+			double angle1 = segment1[i].getTransitionangle();
+			double angle2 = segment2[i].getTransitionangle();
+			 sum +=(angle1-angle2)/(Math.abs(angle2)+Math.abs(angle1));
+		}
+		return sum/(size);
 	}
 	/*
 	 * 已知两个轨迹各个点坐标，求出最长最短距离
@@ -112,11 +122,13 @@ public class StructDistance {
 			return Constant.inf;
 	}
 	
-	public double getStructDistance(double W[]){
+	public double getStructDistance(double... W){
+		if(W.length==4)
 		return calculateAngleDistance()*W[0]+
 				calculateSpeedDistance()*W[1]+
 				calculateDirDistance()*W[2]+
 				calculateLocDistance()*W[3];
+		else return Constant.min;
 	}
 	
 	 

@@ -10,10 +10,10 @@ import com.zhang.pro.data_processing.model.PeoDataModel;
 
 public class ActivityType {
 	private int Oid;
-	private ArrayList<Vector> HR;
+	private Vector<Vector> HR;
 	private float TimeLength=0; //时间总长度
 	private int Count = 0;
-	private String LastTime = "";
+	private float LastTime = 0;
 	private double threshold = 0;
 	DataProcessing dataprocessing = new DataProcessing();
 	public ActivityType(HotRegion HRmodel){
@@ -24,6 +24,7 @@ public class ActivityType {
 			
 		}
 	}
+	public ActivityType(){}
 	// 先查看HR中有无，无则创建新的节点。
 	public boolean MergeHR(ArrayList<Vector> HR,Vector<GeoModel> traject){
 		boolean flag = false;
@@ -34,7 +35,7 @@ public class ActivityType {
 				this.setCount(Count++);
 				trajectm = traject.get(traject.size()/2);
 				traject1m = traject1.get(traject1.size()/2);
-				if (trajectm.getDatadistance()-(traject1m.getDatadistance())>0) this.setLastTime(trajectm.getTime());				
+				if (trajectm.getDatadistance()-(traject1m.getDatadistance())>0) this.setLastTime(trajectm.getDatadistance());				
 				flag = true;}
 			else //创建新的节点
 			{}
@@ -42,7 +43,7 @@ public class ActivityType {
 		return flag;
 	}
 	/*
-	 * if the Euclidean that is between two traject2 is lower than threshold,It's accepted.
+	 * if the Euclidean that is between two trajects is lower than threshold,It's accepted.
 	 */
 	public boolean CompareHR(Vector<GeoModel> trajects1,Vector<GeoModel> trajects2,double threshold){
 		int site1 = trajects1.size()/2;
@@ -63,10 +64,10 @@ public class ActivityType {
 	public void setOid(int oid) {
 		Oid = oid;
 	}
-	public ArrayList<Vector> getHR() {
+	public Vector<Vector> getHR() {
 		return HR;
 	}
-	public void setHR(ArrayList<Vector> hR) {
+	public void setHR(Vector<Vector> hR) {
 		HR = hR;
 	}
 	public float getTimeLength() {
@@ -81,10 +82,10 @@ public class ActivityType {
 	public void setCount(int count) {
 		Count = count;
 	}
-	public String getLastTime() {
+	public float getLastTime() {
 		return LastTime;
 	}
-	public void setLastTime(String lastTime) {
+	public void setLastTime(float lastTime) {
 		LastTime = lastTime;
 	}
 }

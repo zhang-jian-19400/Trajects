@@ -2,12 +2,14 @@ package com.zhang.pro.data_processing;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
 import com.zhang.pro.data_processing.model.DataSet;
 import com.zhang.pro.data_processing.model.GeoModel;
 import com.zhang.pro.data_processing.model.PeoDataModel;
+import com.zhang.pro.data_processing.model.Segment;
 
 public class DataProcessing {
 	
@@ -58,23 +60,25 @@ public class DataProcessing {
 	}
 	/*
 	 * 遍历每个点处的转角，判断如果角度的变化超过一个阈值，则将这段放入到一个子段中。
+	 * 需要重新编写
 	 */
-	public void divideSegments(Vector <GeoModel> geoInfos,double area,PeoDataModel peodatamodel){
+	public ArrayList<Segment> divideSegments(String trajectname,Vector <GeoModel> geoInfos,double threshold){
+		ArrayList<Segment> segments = new ArrayList<Segment>();
 		int start=0,end=0,length,num;
 		Vector trajects =new Vector <GeoModel[]> (); 
-	//	peodatamodel.setTrajects(trajects);
 		for(GeoModel obj:geoInfos){
 			end++;
-			if(Math.abs(obj.getTransitionangle())>area)	//停止向前扫描，将数据放入到trajectors中。
+			if(Math.abs(obj.getTransitionangle())>threshold)	//停止向前扫描，将数据放入到trajectors中。
 				{length = end - start;
-				GeoModel[] segments = new GeoModel[length];
-				for(num=0;num<length;num++) segments[num] = geoInfos.get(start+num);
-				trajects.addElement(segments);
+				Segment segment = new Segment();
+				segment.setParent_Trajectory(trajectname);
+				segment.setStartPosition(start);
+				segment.setOffset(length);
+				segments.add(segment);
 				start = end;
 				}
 		}
-		peodatamodel.getTrajects().addAll(trajects);
-	//	peodatamodel.setTrajects(trajects);
+		return segments;
 	}
 	/*
 	 * floor 指明每个用户的轨迹文件夹在filepath后的第几层

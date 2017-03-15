@@ -5,12 +5,20 @@ import java.util.HashMap;
 
 public class IndexNode extends Node{
 
-	public IndexNode(){
-	}
+	public IndexNode(){}
+	
 	int number;
 	float kese;
 	int yibusinong;
-	HashMap<String,? extends Node> Content;
+	int level;
+	ArrayList<Node> Content = new ArrayList<Node>();
+	
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
 	public float getKese() {
 		return kese;
 	}
@@ -23,10 +31,11 @@ public class IndexNode extends Node{
 	public void setYibusinong(int yibusinong) {
 		this.yibusinong = yibusinong;
 	}
-	public HashMap<String,? extends Node> getContent() {
+	
+	public ArrayList<Node> getContent() {
 		return Content;
 	}
-	public void setContent(HashMap<String,? extends Node> content) {
+	public void setContent(ArrayList<Node> content) {
 		Content = content;
 	}
 	public int getNumber() {

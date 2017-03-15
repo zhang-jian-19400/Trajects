@@ -1,44 +1,31 @@
 package com.zhang.pro.indextree;
 
+import java.util.ArrayList;
+
+import com.zhang.pro.data_processing.model.Segment;
+
 public class NoLeafDefault extends NoLeafNode{
-	int id;
-	int ParentId;
-	int ChildIds[];
-	int CoreIds[];
-	float MaxDist; 
+	NoLeafDefault ParentNode = null;
+	ArrayList<Node> ChildIds= new ArrayList<Node> ();
+	Segment Coreseg = new Segment(); 
 	int Level;
 	public NoLeafDefault(){	
+//		this.ParentNode = null;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getParentId() {
-		return ParentId;
-	}
-	public void setParentId(int parentId) {
-		ParentId = parentId;
-	}
-	public int[] getChildIds() {
+
+	public ArrayList<Node> getChildIds() {
 		return ChildIds;
 	}
-	public void setChildIds(int[] childIds) {
+	public void setChildIds(ArrayList<Node> childIds) {
 		ChildIds = childIds;
+	}	
+	public Segment getCoreIds() {
+		return Coreseg;
 	}
-	public int[] getCoreIds() {
-		return CoreIds;
+	public void setCoreIds(Segment Coreseg) {
+		Coreseg = Coreseg;
 	}
-	public void setCoreIds(int[] coreIds) {
-		CoreIds = coreIds;
-	}
-	public float getMaxDist() {
-		return MaxDist;
-	}
-	public void setMaxDist(float maxDist) {
-		MaxDist = maxDist;
-	}
+
 	public int getLevel() {
 		return Level;
 	}
