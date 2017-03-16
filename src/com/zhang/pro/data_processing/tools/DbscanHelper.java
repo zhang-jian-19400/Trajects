@@ -15,6 +15,10 @@ public class DbscanHelper {
 		IndexNode indexnode = new IndexNode();
 		if(indexnode.getLevel()==0)
 		{ArrayList<Node> leafnodes = indexnode.getContent();
+		/*
+		 * 遍历每个段，并建立一个非叶子节点，将数据聚类到该节点中
+		 * 从第二个索引节点出发访问这些元素。如果不符合条件，就删除。
+		 */
 			for(int i=0;i<indexnode.getNumber();i++)
 			{
 				Segment segment= leafnodes.get(i).getSegment();
