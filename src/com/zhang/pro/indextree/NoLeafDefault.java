@@ -10,20 +10,6 @@ public class NoLeafDefault extends NoLeafNode{
 	Segment Coreseg = new Segment(); 
 	int Level;
 	public NoLeafDefault(){	
-//		this.ParentNode = null;
-	}
-
-	public ArrayList<Node> getChildIds() {
-		return ChildIds;
-	}
-	public void setChildIds(ArrayList<Node> childIds) {
-		ChildIds = childIds;
-	}	
-	public Segment getCoreIds() {
-		return Coreseg;
-	}
-	public void setCoreIds(Segment Coreseg) {
-		Coreseg = Coreseg;
 	}
 
 	public int getLevel() {
@@ -31,5 +17,30 @@ public class NoLeafDefault extends NoLeafNode{
 	}
 	public void setLevel(int level) {
 		Level = level;
-	}	
+	}
+
+	public NoLeafDefault getParentNode() {
+		return ParentNode;
+	}
+
+	public void setParentNode(NoLeafDefault parentNode) {
+		ParentNode = parentNode;
+	}
+
+	public ArrayList<Node> getChildIds() {
+		return ChildIds;
+	}
+
+	public void setChildIds(ArrayList<Node> childIds) {
+		ChildIds = childIds;
+	}
+
+	public Segment getCoreseg() {
+		return Coreseg;
+	}
+
+	public void setCoreseg(Segment coreseg) {
+		Coreseg = coreseg;
+	}
+	
 }

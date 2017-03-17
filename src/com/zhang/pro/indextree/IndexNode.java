@@ -5,14 +5,17 @@ import java.util.HashMap;
 
 public class IndexNode extends Node{
 
-	public IndexNode(){}
 	
 	int number;
-	float kese;
-	int yibusinong;
+	float kese; //距离阈值
+	int yibusinong; //数量阈值
 	int level;
 	ArrayList<Node> Content = new ArrayList<Node>();
-	
+	ArrayList<Node> noiseNodes = new ArrayList<Node>();
+	public IndexNode(float kese,int yibusinong){
+		this.kese = kese;
+		this.yibusinong = yibusinong;
+	}
 	public int getLevel() {
 		return level;
 	}
@@ -44,5 +47,10 @@ public class IndexNode extends Node{
 	public void setNumber(int number) {
 		this.number = number;
 	}
-	
+	public ArrayList<Node> getNoiseNodes() {
+		return noiseNodes;
+	}
+	public void setNoiseNodes(ArrayList<Node> noiseNodes) {
+		this.noiseNodes = noiseNodes;
+	}
 }

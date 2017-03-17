@@ -12,10 +12,17 @@ import com.zhang.pro.data_processing.model.PeoDataModel;
 import com.zhang.pro.data_processing.model.Segment;
 
 public class DataProcessing {
-	
-	public DataProcessing(){
-		
+	private static DataSet dataset = new DataSet();
+  	public DataProcessing(){}
+  	
+	public static DataSet getDataset() {
+		return dataset;
 	}
+
+	public static void setDataset(DataSet dataset) {
+		DataProcessing.dataset = dataset;
+	}
+
 	public double pointToangle(GeoModel point2,GeoModel point1,GeoModel point3){
 		double ab,ac,bc,angle,latitude;
 		ab = geoDistance(point1,point2);
@@ -62,7 +69,7 @@ public class DataProcessing {
 	 * 遍历每个点处的转角，判断如果角度的变化超过一个阈值，则将这段放入到一个子段中。
 	 * 需要重新编写
 	 */
-	public ArrayList<Segment> divideSegments(String trajectname,Vector <GeoModel> geoInfos,double threshold){
+	public ArrayList<Segment> divideSegments(String trajectname,Vector<GeoModel> geoInfos,double threshold){
 		ArrayList<Segment> segments = new ArrayList<Segment>();
 		int start=0,end=0,length,num;
 		Vector trajects =new Vector <GeoModel[]> (); 
@@ -84,7 +91,7 @@ public class DataProcessing {
 	 * floor 指明每个用户的轨迹文件夹在filepath后的第几层
 	 * Presentfloor在上一层
 	 */
-	public void traverseAllPlt(DataSet dataset,PeoDataModel peodatamodel,String filePath,int floor,int Presentfloor)throws Exception{
+	public void traverseAllPlt(PeoDataModel peodatamodel,String filePath,int floor,int Presentfloor)throws Exception{
 		File file = new File(filePath);
 		Presentfloor++;
 		String peoid;
@@ -105,21 +112,29 @@ public class DataProcessing {
 //							peodatamodel.setPltfiles(new Vector<String>());
 						}
 						peodatamodel.setName(name);
-						traverseAllPlt(dataset,peodatamodel,filePath+"/"+name,floor,Presentfloor);
+						traverseAllPlt(peodatamodel,filePath+"/"+name,floor,Presentfloor);
 					}
 					else
-						traverseAllPlt(dataset,peodatamodel,filePath+"/"+name,floor,Presentfloor);
+						traverseAllPlt(peodatamodel,filePath+"/"+name,floor,Presentfloor);
 					}
 				else{
 //					peodatamodel.getPltfiles().addElement(filePath+"/"+name);
-					peodatamodel.getContent().put(filePath+"/"+name,new Vector());
+					peodatamodel.getContent().put(filePath+"/"+name,new Vector<GeoModel>());
 				//	System.out.println(filePath+"/"+name);
 				}					
 			}
 		}
 	}
-	public void TrajectroyDbscan(Vector<GeoModel[]> trajects){
-		
+	public Vector getSegmentsByName(String... strings){
+		Vector<Vector<GeoModel>> segments = new Vector<Vector<GeoModel>>();
+		Vector<GeoModel> e;
+		for(PeoDataModel people:dataset.getPeople()){
+			for(String string : strings)
+			if((e=people.getContent().get(string))!=null){
+				segments.add(e);
+			}
+		}
+		return segments;
 	}
 	
 }

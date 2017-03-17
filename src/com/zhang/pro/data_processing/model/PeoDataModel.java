@@ -54,7 +54,7 @@ public class PeoDataModel implements Cloneable{
 		this.pltfiles = pltfiles;
 	}
 	
-	public HashMap<String, Vector<GeoModel>> getContent() {
+	public HashMap<String,Vector<GeoModel>> getContent() {
 		return Content;
 	}
 	public void setContent(HashMap<String, Vector<GeoModel>> content) {

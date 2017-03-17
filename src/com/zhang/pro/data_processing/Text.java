@@ -19,7 +19,8 @@ public class Text {
 		try {
 
 			//将文件夹中，属于该个人的文件名字，都存放到各个人下
-			dataprocessobj.traverseAllPlt(dataset,peodatamodel,filename,3,1);
+			 dataprocessobj.traverseAllPlt(peodatamodel,filename,3,1);
+			 dataset =dataprocessobj.getDataset();
 			dataset.getPeople().addElement((PeoDataModel)peodatamodel.clone());
 			int i=0,j=0;Vector <GeoModel> obj1 = new Vector();
 			//遍历这些人对象，逐个处理文件，提取plt文件中的数据，存放到个人的轨迹段链表中，最终结果存储在dataset中。
@@ -33,7 +34,7 @@ public class Text {
 						Vector <GeoModel> obj=fileprocess.readGeoPlt(str);
 						obj1 = obj;
 						//用新的更新好的<string，trajectory>更新已有的内容,中间的为对象实例，而非空
-						model.getContent().replace(str, new Vector(), obj);
+						model.getContent().replace(str,new Vector<GeoModel>(), obj);
 						dataprocessobj.computeTurnAngle(obj);
 						}					
 					System.out.println(model.getContent().size());

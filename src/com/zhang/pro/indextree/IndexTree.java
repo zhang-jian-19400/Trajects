@@ -13,8 +13,6 @@ import com.zhang.pro.data_processing.model.Segment;
 public class IndexTree {
 	DataProcessing dataprocesser = new DataProcessing();
 	ArrayList<Node> index = new ArrayList<Node>();
-	ArrayList<NoLeafNode> noleafnodes;
-	ArrayList<LeafNode> leafnodes;
 	
 	public IndexTree(){}
 
@@ -33,7 +31,8 @@ public class IndexTree {
 		第0个索引节点主要是指向叶子节点，
 	 */
 	public void createLeaf(DataSet dataset){
-		IndexNode node = new IndexNode();		
+		//叶子节点的kese存放的是转角的度数
+		IndexNode node = new IndexNode(45,0);		
 		this.index.add(node);
 		//将所有的轨迹按照段为单位放入到叶子节点中。
 			for(PeoDataModel people : dataset.getPeople()){
@@ -41,7 +40,7 @@ public class IndexTree {
 				for(String name:people.getContent().keySet()){
 					Vector<GeoModel> trajectory = people.getContent().get(name);
 					if(trajectory.size()!=0||trajectory!=null){
-						ArrayList<Segment> segments = dataprocesser.divideSegments(name, trajectory, 45);					
+						ArrayList<Segment> segments = dataprocesser.divideSegments(name, trajectory,node.getKese());					
 						for(Segment segment : segments){	
 							LeafDefault leafdefault = new LeafDefault();
 							leafdefault.setSegment(segment);
