@@ -19,9 +19,7 @@ public class ActivityType {
 	public ActivityType(HotRegion HRmodel){
 		HashMap <Integer,Vector> map = HRmodel.getCluster();
 		for(Integer id: map.keySet()){
-			Vector <GeoModel> segments = map.get(id);
-			
-			
+			Vector <GeoModel> segments = map.get(id);		
 		}
 	}
 	public ActivityType(){}

@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class HotRegion {
 	private String filename;
-	private HashMap<Integer,Vector> Cluster;
+	private HashMap<Integer,Vector> Cluster = new HashMap<Integer,Vector>();
 	
 	public HotRegion(){
 		this.Cluster = new HashMap();

@@ -12,10 +12,10 @@ import com.zhang.pro.data_processing.tools.Constant;
 public class Recommentdation {
 	//文件名，热点区域
 	private HashMap<String,ArrayList<ActivityType>> PeoActivity = new HashMap();
-	private double minTime;
-	private double minSpeed;
-	private double yibuxingnong;
-	private double threshold;
+	private double minTime=180;
+	private double minSpeed = 3;
+	private double yibuxingnong = 1.5;
+	private double threshold = 10;
 	public Recommentdation(){	}
 	DataProcessing dataprocessing = new DataProcessing();
 	
@@ -38,7 +38,7 @@ public class Recommentdation {
 			double speed = dataprocessing.geoDistance(trajectories.get(i+1),trajectories.get(i))/time;
 			//目前主要的做法是通过速度与时间来划分两种热点区域省略了一些步骤
 			if(speed>minSpeed)
-				if((time>minTime)&&(speed<minSpeed*yibuxingnong)) //belongs to region1
+				if((time>minTime)&&(speed<minSpeed*yibuxingnong)) //belongs to region1 环绕模式
 				{		
 					cluster.addElement(trajectories.get(i));
 					if(clusterOpen == false)
@@ -52,7 +52,7 @@ public class Recommentdation {
 					ClusterId++;
 					cluster = new Vector(); 
 				}			
-			else if(speed<minSpeed) //belongs to region2
+			else if(speed<minSpeed) //belongs to region2 停留模式
 				{
 					cluster.addElement(trajectories.get(i));
 					if(clusterOpen == false)
@@ -68,12 +68,14 @@ public class Recommentdation {
 		}
 		return hotregion;
 	}
-	public PeopleActivity dealPeoHR(PeoDataModel peomodel){
+	public PeopleActivity findPeoActivity(PeoDataModel peomodel){
 		Vector<ActivityType> activities = new Vector<ActivityType>();
 		int i=0;
+		//访问人的所有轨迹数据文件 哈希表的添加不是按照的顺序
 		for(String key:peomodel.getContent().keySet()){
 			i++;
 			HotRegion area = findHotRegion(peomodel.getContent().get(key),minTime,minSpeed,yibuxingnong);
+			if (area.getCluster().size()>=1)
 				mergePeoRegion(activities,area);
 		}
 		PeopleActivity peoactivity = new PeopleActivity();
