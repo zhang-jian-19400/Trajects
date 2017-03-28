@@ -1,11 +1,13 @@
 package com.zhang.pro.recommendation;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.zhang.pro.data_processing.DataProcessing;
 import com.zhang.pro.data_processing.model.DataSet;
 import com.zhang.pro.data_processing.model.GeoModel;
 import com.zhang.pro.data_processing.model.PeoDataModel;
+import com.zhang.pro.data_processing.model.PoiTable;
 import com.zhang.pro.data_processing.tools.FileProcess;
 import com.zhang.pro.indextree.IndexTree;
 
@@ -30,7 +32,7 @@ public class Test {
 			//遍历这些人对象，逐个处理文件，提取plt文件中的数据，存放到个人的轨迹段链表中，最终结果存储在dataset中。
 			for(PeoDataModel model:dataset.getPeople()){
 				i++;//目前只对第一个人的轨迹进行分析
-				if(i<=10){
+				if(i<=1){
 					System.out.println(model.getName());
 				//逐个处理每一个plt文件
 					for(String str:model.getContent().keySet())
@@ -45,9 +47,29 @@ public class Test {
 				}
 				}
 			Recommentdation recommander = new Recommentdation();
-			//寻找到第一个人的轨迹数据
+			/*
+			 * 寻找到第一个人的轨迹数据,将他的活动列表整理出来。并且通过POI处理。
+			 */
 			PeopleActivity peopleactivity =recommander.findPeoActivity(dataset.getPeople().get(0));
-			System.out.println(peopleactivity.getActivities().size());
+			for(ActivityType activity:peopleactivity.getActivities()){
+			/*	int position = activity.getHR().get(0).size()/2;
+				GeoModel point = (GeoModel)activity.getHR().get(0).get(position);
+				PoiTable poitable = new PoiTable();
+				//得到兴趣点ID号，
+				int result = poitable.getPoiInfo(point.getLatitude(), point.getLongitude());
+				activity.setOid(result);
+				//Done
+			 */
+				ArrayList<GeoModel> segments= new ArrayList<GeoModel>();
+				System.out.println(activity.getHR().size());
+				for(Vector<GeoModel> segment:activity.getHR()){	
+					for(GeoModel point:segment){
+					segments.add(point);
+					System.out.println(point.getLatitude());
+				}
+					}
+				fileprocess.dataToJsonfiletest(segments);
+			}			
 			System.out.println();
 		} catch (Exception e){
 			e.printStackTrace();

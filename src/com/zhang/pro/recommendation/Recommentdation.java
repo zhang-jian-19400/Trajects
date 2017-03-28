@@ -35,7 +35,8 @@ public class Recommentdation {
 		for(int i=0;i<trajectories.size()-1;i++){
 			//求出该点的停留时间，与速度
 			double time = (trajectories.get(i+1).getDatadistance()-trajectories.get(i).getDatadistance())*3600*24;
-			double speed = dataprocessing.geoDistance(trajectories.get(i+1),trajectories.get(i))/time;
+			double speed = dataprocessing.geoDistance(trajectories.get(i+1),
+					trajectories.get(i))/time;
 			//目前主要的做法是通过速度与时间来划分两种热点区域省略了一些步骤
 			if(speed>minSpeed)
 				if((time>minTime)&&(speed<minSpeed*yibuxingnong)) //belongs to region1 环绕模式
@@ -71,7 +72,7 @@ public class Recommentdation {
 	public PeopleActivity findPeoActivity(PeoDataModel peomodel){
 		Vector<ActivityType> activities = new Vector<ActivityType>();
 		int i=0;
-		//访问人的所有轨迹数据文件 哈希表的添加不是按照的顺序
+		//访问人的所有轨迹数据文件 哈希表的添加不是按照加入的顺序
 		for(String key:peomodel.getContent().keySet()){
 			i++;
 			HotRegion area = findHotRegion(peomodel.getContent().get(key),minTime,minSpeed,yibuxingnong);
@@ -90,14 +91,14 @@ public class Recommentdation {
 	 */
 	public void mergePeoRegion(Vector<ActivityType> activities,HotRegion area){
 		double mindistance = Constant.inf;
-		int position = -1;
+		int position = -1; //表示当前可能性最靠近的的活动。
 		for(Integer Cluster :area.getCluster().keySet()){
 			position = -1;
 			mindistance = Constant.inf;
 			Vector<GeoModel> hrarea1 = area.getCluster().get(Cluster);
 		for(int i=0;i<activities.size();i++){
 			Vector<GeoModel> hrarea2 = activities.get(i).getHR().get(0);//get the first HR of current activity
-			double distance = dataprocessing.geoDistance(hrarea1.get(hrarea1.size()/2),hrarea2.get(hrarea2.size()));
+			double distance = dataprocessing.geoDistance(hrarea1.get(hrarea1.size()/2),hrarea2.get(hrarea2.size()/2));
 			if(distance<threshold){ //如果两者距离比阈值小，那么再选择出距离最短的那个。
 				if(distance<mindistance){
 					 mindistance = distance;
@@ -112,7 +113,7 @@ public class Recommentdation {
 				activity.setCount(0);
 				activity.setHR(vector);
 				activity.setLastTime(hrarea1.get(hrarea1.size()-1).getDatadistance());
-				activity.setOid(activities.size());//从0编号开始				
+//				activity.setOid(activity.getOid()+1);//从已经有的编号开始				
 				activity.setThreshold(threshold);
 				activity.setTimeLength(0);
 				activities.add(activity);

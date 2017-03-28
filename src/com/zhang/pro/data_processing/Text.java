@@ -40,9 +40,11 @@ public class Text {
 					System.out.println(model.getContent().size());
 				}
 				}
-			IndexTree indextree = new IndexTree();
-			indextree.createLeaf(dataset);
-			System.out.println();
+			
+			fileprocess.dataToJsonfile(dataset.getPeople().get(0));;
+//			IndexTree indextree = new IndexTree();
+//			indextree.createLeaf(dataset);
+//			System.out.println();
 		} catch (Exception e){
 			e.printStackTrace();
 		}	

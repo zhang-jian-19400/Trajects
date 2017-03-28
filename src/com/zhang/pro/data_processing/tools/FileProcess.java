@@ -4,11 +4,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
 import com.zhang.pro.data_processing.model.GeoModel;
+import com.zhang.pro.data_processing.model.PeoDataModel;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 /*
  * 默认文件plt格式为：
  * 已经是：按照时间排序，正式数据从第7行开始。
@@ -53,12 +60,60 @@ public class FileProcess {
 		return geoInfos;	
 	}
 	
-	/*
-	 *  A:21.17156982421875 B:
-	 */
-	
-	/*
-	 * 读取文件夹内容，获取每个人的轨迹数据读入数据从Geolife Trajectories 1.3文件夹开始。
-	 * Geolife Trajectories 1.3\Data\000\Trajectory，读到每个plt文件。
-	 */
+	public void dataToJsonfile(PeoDataModel peodata){
+		File file = new File("D:/学习资料/城市轨迹数据/Geolife Trajectories 1.3/Geolife Trajectories 1.3/Data/000/2.json");	
+		JSONArray jsonarray = new JSONArray();
+		for(String name:peodata.getContent().keySet())
+		{
+			StringBuffer strbuff = new StringBuffer();	
+			JSONArray array = new JSONArray();
+			for(GeoModel geo:peodata.getContent().get(name))
+			{
+				List<Float> list = new ArrayList<Float>();
+				list.add(geo.getLongitude());
+				list.add(geo.getLatitude());
+				HashMap<String,List<Float>> map = new HashMap<String,List<Float>>();
+				map.put("coord",list);
+				JSONObject json = JSONObject.fromObject(map);
+				array.add(json);
+			}
+			jsonarray.add(array);
+			
+		}
+		try {
+			FileWriter writer= new FileWriter(file);
+			writer.write(jsonarray.toString());
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	}
+	public void dataToJsonfiletest(ArrayList<GeoModel> peodata){
+		File file = new File("D:/学习资料/城市轨迹数据/Geolife Trajectories 1.3/Geolife Trajectories 1.3/Data/000/3.json");	
+		JSONArray jsonarray = new JSONArray();	
+			StringBuffer strbuff = new StringBuffer();	
+			JSONArray array = new JSONArray();
+			for(GeoModel geo:peodata)
+			{
+				List<Float> list = new ArrayList<Float>();
+				list.add(geo.getLongitude());
+				list.add(geo.getLatitude());
+				HashMap<String,List<Float>> map = new HashMap<String,List<Float>>();
+				map.put("coord",list);
+				JSONObject json = JSONObject.fromObject(map);
+				array.add(json);
+			}
+			jsonarray.add(array);
+			
+		
+		try {
+			FileWriter writer= new FileWriter(file);
+			writer.write(jsonarray.toString());
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	}
 }
