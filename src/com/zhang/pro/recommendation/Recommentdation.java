@@ -12,13 +12,12 @@ import com.zhang.pro.data_processing.tools.Constant;
 public class Recommentdation {
 	//文件名，热点区域
 	private HashMap<String,ArrayList<ActivityType>> PeoActivity = new HashMap();
-	private double minTime=180;
-	private double minSpeed = 3;
+	private double minTime=1800;
+	private double minSpeed = 0.8;
 	private double yibuxingnong = 1.5;
-	private double threshold = 10;
-	public Recommentdation(){	}
+	private double threshold = 20;
+	public Recommentdation(){}
 	DataProcessing dataprocessing = new DataProcessing();
-	
 	/*
 	 * @Description: This function find region in a plt file.
 	 * @param name refers to the file's name; trajectores is the content of plt file.
@@ -28,58 +27,85 @@ public class Recommentdation {
 	public HotRegion findHotRegion(Vector<GeoModel> trajectories,double minTime,double minSpeed,double yibuxingnong){
 		Vector region1=new Vector <GeoModel>();
 		Vector region2 = new Vector <GeoModel>();
-		boolean clusterOpen = false;
+		boolean clusterOpen1 = false;
+		boolean clusterOpen2 = false;
 		int ClusterId=0;
+		
 		Vector cluster = new Vector();
 		HotRegion hotregion = new HotRegion();
 		for(int i=0;i<trajectories.size()-1;i++){
 			//求出该点的停留时间，与速度
 			double time = (trajectories.get(i+1).getDatadistance()-trajectories.get(i).getDatadistance())*3600*24;
-			double speed = dataprocessing.geoDistance(trajectories.get(i+1),
-					trajectories.get(i))/time;
+			double speed = dataprocessing.geoDistance(trajectories.get(i+1),trajectories.get(i))/time;
 			//目前主要的做法是通过速度与时间来划分两种热点区域省略了一些步骤
-			if(speed>minSpeed)
-				if((time>minTime)&&(speed<minSpeed*yibuxingnong)) //belongs to region1 环绕模式
-				{		
-					cluster.addElement(trajectories.get(i));
-					if(clusterOpen == false)
-					clusterOpen = true;
-				}
-				else if(clusterOpen==true)
-				{
-					clusterOpen = false;
-					cluster.addElement(trajectories.get(i+1));
-					hotregion.getCluster().put(ClusterId,cluster);
-					ClusterId++;
-					cluster = new Vector(); 
-				}			
-			else if(speed<minSpeed) //belongs to region2 停留模式
-				{
-					cluster.addElement(trajectories.get(i));
-					if(clusterOpen == false)
-						clusterOpen = true;
-				}
-				else if(clusterOpen == true)
-				{
-					clusterOpen = false;
-					hotregion.getCluster().put(ClusterId, cluster);
+			
+			if(time>minTime){
+					if(clusterOpen2 == true)
+					{
+						clusterOpen2 = false;
+						if(cluster.size()>20){
+						hotregion.getCluster().put(ClusterId, (Vector)cluster.clone());
+						ClusterId++;}
+						cluster = new Vector();
+					}
+					if((speed<minSpeed*yibuxingnong)) //belongs to region1室内
+					{		
+						cluster.addElement(trajectories.get(i+1));
+						if(clusterOpen1 == false)
+						clusterOpen1 = true;
+					}
+		/*			else if(clusterOpen1==true)
+					{
+						clusterOpen1 = false;
+						cluster.addElement(trajectories.get(i+1));
+						hotregion.getCluster().put(ClusterId,(Vector)cluster.clone());
+						ClusterId++;
+						cluster = new Vector(); 
+					}		*/
+				}	
+			else {
+					if(clusterOpen1==true) {
+					clusterOpen1 = false;
+					hotregion.getCluster().put(ClusterId,(Vector)cluster.clone());
 					ClusterId++;
 					cluster = new Vector();
-				}	
+					}  
+					if((speed<minSpeed)) //belongs to region2 室外
+					{
+						cluster.addElement(trajectories.get(i+1));
+						if(clusterOpen2 == false)
+							clusterOpen2 = true;
+					}
+					else if(clusterOpen2 == true)
+					{
+						clusterOpen2 = false;
+						if(cluster.size()>20){
+						hotregion.getCluster().put(ClusterId, (Vector)cluster.clone());
+						ClusterId++;
+						}
+						cluster = new Vector();
+						
+					}
+				}
 		}
 		return hotregion;
 	}
 	public PeopleActivity findPeoActivity(PeoDataModel peomodel){
 		Vector<ActivityType> activities = new Vector<ActivityType>();
+		PeopleActivity peoactivity = new PeopleActivity();
 		int i=0;
 		//访问人的所有轨迹数据文件 哈希表的添加不是按照加入的顺序
 		for(String key:peomodel.getContent().keySet()){
 			i++;
+			//此处的area为一个文件中的所有热点区域
 			HotRegion area = findHotRegion(peomodel.getContent().get(key),minTime,minSpeed,yibuxingnong);
 			if (area.getCluster().size()>=1)
 				mergePeoRegion(activities,area);
-		}
-		PeopleActivity peoactivity = new PeopleActivity();
+			peoactivity.addActivitiesnumber(area.getCluster().size());
+		}	
+		//完善peopleactivity的内容
+		for(ActivityType activitytype:activities)
+			peoactivity.addActivitytime(activitytype.getTimeLength());
 		peoactivity.setActivities(activities);
 	return peoactivity;
 	}
@@ -110,16 +136,25 @@ public class Recommentdation {
 				Vector vector = new Vector();
 				vector.add(hrarea1);
 				ActivityType activity = new ActivityType();				
-				activity.setCount(0);
-				activity.setHR(vector);
+				activity.setHR((Vector)vector.clone());
 				activity.setLastTime(hrarea1.get(hrarea1.size()-1).getDatadistance());
-//				activity.setOid(activity.getOid()+1);//从已经有的编号开始				
+//				activity.setOid(activity.getOid()+1);//从已经有的编号开始	
+				double timeinterval = hrarea1.get(hrarea1.size()-1).getDatadistance()-hrarea1.get(0).getDatadistance();
+				activity.setTimeLength(timeinterval);
 				activity.setThreshold(threshold);
 				activity.setTimeLength(0);
-				activities.add(activity);
+				activity.setVisitTime(1);
+				activities.add((ActivityType)activity.clone());
 			}
-			else{
-				activities.get(position).getHR().add(hrarea1);
+			else{ //若有新的热点区域加入，则修改该活动的相关信息。以备协同过滤使用
+				ActivityType activity = activities.get(position);
+				activity.getHR().add((Vector)hrarea1.clone());
+				int visittime = activity.getVisitTime();
+				activity.setVisitTime(++visittime);
+				activity.setLastTime(hrarea1.get(hrarea1.size()-1).getDatadistance());
+				double timeinterval = hrarea1.get(hrarea1.size()-1).getDatadistance()-hrarea1.get(0).getDatadistance();
+				double timeAll = activity.getTimeLength();
+				activity.setTimeLength(timeinterval+timeAll);
 			}
 		}
 	}

@@ -8,12 +8,14 @@ import com.zhang.pro.data_processing.DataProcessing;
 import com.zhang.pro.data_processing.model.GeoModel;
 import com.zhang.pro.data_processing.model.PeoDataModel;
 
-public class ActivityType {
+public class ActivityType implements Cloneable{
 	private static int Oid;
 	private Vector<Vector> HR;
-	private float TimeLength=0; //时间总长度
+	private double TimeLength=0; //时间总长度
 	private int Count = 0;
-	private float LastTime = 0;
+	private double LastTime = 0;
+	private int visitTime = 0;
+	private float DegreeInterest = 0;
 	private double threshold = 0;
 	DataProcessing dataprocessing = new DataProcessing();
 	public ActivityType(HotRegion HRmodel){
@@ -68,10 +70,10 @@ public class ActivityType {
 	public void setHR(Vector<Vector> hR) {
 		HR = hR;
 	}
-	public float getTimeLength() {
+	public double getTimeLength() {
 		return TimeLength;
 	}
-	public void setTimeLength(float timeLength) {
+	public void setTimeLength(double timeLength) {
 		TimeLength = timeLength;
 	}
 	public int getCount() {
@@ -80,10 +82,32 @@ public class ActivityType {
 	public void setCount(int count) {
 		Count = count;
 	}
-	public float getLastTime() {
+	public double getLastTime() {
 		return LastTime;
 	}
-	public void setLastTime(float lastTime) {
+	public void setLastTime(double lastTime) {
 		LastTime = lastTime;
+	}
+	public int getVisitTime() {
+		return visitTime;
+	}
+	public void setVisitTime(int visitTime) {
+		this.visitTime = visitTime;
+	}
+	public float getDegreeInterest() {
+		return DegreeInterest;
+	}
+	public void setDegreeInterest(float degreeInterest) {
+		DegreeInterest = degreeInterest;
+	}
+	public Object clone(){
+		ActivityType type=null;
+		try {
+			type = (ActivityType)super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return type;
 	}
 }

@@ -47,11 +47,11 @@ public class FileProcess {
 			String tempinfo[] = new String[7];
 			tempinfo = temp.split(",");
 			GeoModel geomodel = new GeoModel();
-			geomodel.setLatitude(Float.parseFloat(tempinfo[0]));
-			geomodel.setLongitude(Float.parseFloat(tempinfo[1]));
+			geomodel.setLatitude(Double.parseDouble(tempinfo[0]));
+			geomodel.setLongitude(Double.parseDouble(tempinfo[1]));
 			geomodel.setType(Integer.parseInt(tempinfo[2])); 
 			geomodel.setAltitude(Float.parseFloat(tempinfo[3]));
-			geomodel.setDatadistance(Float.parseFloat(tempinfo[4]));
+			geomodel.setDatadistance(Double.parseDouble(tempinfo[4]));
 			geomodel.setData(tempinfo[5]);
 			geomodel.setTime(tempinfo[6]);
 			geoInfos.addElement(geomodel);
@@ -69,10 +69,10 @@ public class FileProcess {
 			JSONArray array = new JSONArray();
 			for(GeoModel geo:peodata.getContent().get(name))
 			{
-				List<Float> list = new ArrayList<Float>();
+				List<Double> list = new ArrayList<Double>();
 				list.add(geo.getLongitude());
 				list.add(geo.getLatitude());
-				HashMap<String,List<Float>> map = new HashMap<String,List<Float>>();
+				HashMap<String,List<Double>> map = new HashMap<String,List<Double>>();
 				map.put("coord",list);
 				JSONObject json = JSONObject.fromObject(map);
 				array.add(json);
@@ -96,10 +96,10 @@ public class FileProcess {
 			JSONArray array = new JSONArray();
 			for(GeoModel geo:peodata)
 			{
-				List<Float> list = new ArrayList<Float>();
+				List<Double> list = new ArrayList<Double>();
 				list.add(geo.getLongitude());
 				list.add(geo.getLatitude());
-				HashMap<String,List<Float>> map = new HashMap<String,List<Float>>();
+				HashMap<String,List<Double>> map = new HashMap<String,List<Double>>();
 				map.put("coord",list);
 				JSONObject json = JSONObject.fromObject(map);
 				array.add(json);

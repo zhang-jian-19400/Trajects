@@ -76,8 +76,8 @@ public class StructDistance {
 		GeoModel seg2End = segment2.get(segment2.size()-1);
 		GeoModel Point = new GeoModel();
 		//计算转角,将两条轨迹移动至同一个起点上。以seg2为参照
-		float y = seg2Start.getLatitude()-seg1Start.getLatitude();
-		float x = seg2Start.getLongitude()-seg1Start.getLongitude();
+		Double y = seg2Start.getLatitude()-seg1Start.getLatitude();
+		Double x = seg2Start.getLongitude()-seg1Start.getLongitude();
 		Point.setLatitude(seg1End.getLatitude()+y);
 		Point.setLongitude(seg1End.getLongitude()+x);		
 		double angle = process.pointToangle(seg2Start, Point, seg2End);

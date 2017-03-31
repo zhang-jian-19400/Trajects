@@ -1,21 +1,21 @@
 package com.zhang.pro.data_processing.model;
 
 public class POI {
-  private float latitude;
-  private float longtitude;
+  private double latitude;
+  private double longtitude;
   private String poitype;
   private static int id;
   //...
-public float getLatitude() {
+public double getLatitude() {
 	return latitude;
 }
-public void setLatitude(float latitude) {
+public void setLatitude(double latitude) {
 	this.latitude = latitude;
 }
-public float getLongtitude() {
+public double getLongtitude() {
 	return longtitude;
 }
-public void setLongtitude(float longtitude) {
+public void setLongtitude(double longtitude) {
 	this.longtitude = longtitude;
 }
 public String getPoitype() {
